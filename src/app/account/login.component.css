@@ -15,16 +15,12 @@ body {
     padding-top: 20px;
 }
 
-.main {
-    padding: 0px 10px;
-}
-
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
 }
 
 @media screen and (max-width: 450px) {
-    .login-form{
+    .card{
         margin-top: 10%;
     }
 
@@ -34,9 +30,6 @@ body {
 }
 
 @media screen and (min-width: 768px){
-    .main{
-        margin-left: 40%; 
-    }
 
     .sidenav{
         width: 30%;
@@ -46,7 +39,7 @@ body {
         left: 0;
     }
 
-    .login-form{
+    .card{
         margin-top: 80%;
     }
 
