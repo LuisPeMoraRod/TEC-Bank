@@ -15,8 +15,15 @@ body {
     padding-top: 20px;
 }
 
-@media screen and (max-height: 450px) {
+.main {
+    scroll-padding-block:auto;
+    padding-top: 20px;
+    padding-bottom: 346px;
+  }
+
+@media screen and (max-height: 1000px) {
     .sidenav {padding-top: 15px;}
+
 }
 
 @media screen and (max-width: 450px) {
@@ -24,12 +31,12 @@ body {
         margin-top: 10%;
     }
 
-    .register-form{
-        margin-top: 10%;
-    }
 }
 
 @media screen and (min-width: 768px){
+    .main{
+        margin-left: 40%; 
+    }
 
     .sidenav{
         width: 30%;
@@ -40,12 +47,9 @@ body {
     }
 
     .card{
-        margin-top: 80%;
+        margin-top: 50%;
     }
 
-    .register-form{
-        margin-top: 20%;
-    }
 }
 
 .login-main-text{
