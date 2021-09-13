@@ -6,6 +6,7 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 // array in local storage for registered users
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let roles = JSON.parse(localStorage.getItem('roles')) || [];
+let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -44,6 +45,18 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateRole();
                 case url.match(/\/roles\/\d+$/) && method === 'DELETE':
                     return deleteRole();
+
+                case url.endsWith('/accounts/register') && method === 'POST':
+                    return registerAccount();
+                case url.endsWith('/accounts') && method === 'GET':
+                    return getAccounts();
+                case url.match(/\/accounts\/\d+$/) && method === 'GET':
+                    return getAccountById();
+                case url.match(/\/accounts\/\d+$/) && method === 'PUT':
+                    return updateAccount();
+                case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
+                    return deleteAccount();
+
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -70,6 +83,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             if (users.find(x => x.username === user.username)) {
                 return error('Username "' + user.username + '" is already taken')
+            } else if (users.find(x => x.ssn === user.ssn)) {
+                return error('SSN "' + user.ssn + '" is already taken')
             }
 
             user.id = users.length ? Math.max(...users.map(x => x.id)) + 1 : 1;
@@ -145,10 +160,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     
             if (roles.find(x => x.name === role.name)) {
                 return error('Username "' + role.name + '" is already taken')
-            }else if (roles.find(x => x.id === role.id)) {
-                return error('Username "' + role.id + '" is already taken')
             }
-    
+
             role.id = roles.length ? Math.max(...roles.map(x => x.id)) + 1 : 1;
             roles.push(role);
             localStorage.setItem('roles', JSON.stringify(roles));
@@ -182,6 +195,52 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             // update and save role
             Object.assign(role, params);
             localStorage.setItem('roles', JSON.stringify(roles));
+
+            return ok();
+        }
+
+        //Accounts
+        function registerAccount() {
+            const account = body
+    
+            if (accounts.find(x => x.number === account.number)) {
+                return error('Account number "' + account.number + '" is already taken')
+            }else if (!users.find(x => x.ssn === account.clientId)){
+                return error('No client is registered with SSN: ' + account.clientId)
+            } 
+    
+            account.id = accounts.length ? Math.max(...accounts.map(x => x.id)) + 1 : 1;
+            accounts.push(account);
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            return ok();
+        }
+
+        function getAccounts() {
+            if (!isLoggedIn()) return unauthorized();
+            return ok(accounts);
+        }
+
+        function deleteAccount() {
+            if (!isLoggedIn()) return unauthorized();
+            accounts = accounts.filter(x => x.id !== idFromUrl());
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            return ok();
+        }
+
+        function getAccountById() {
+            if (!isLoggedIn()) return unauthorized();
+            const account = accounts.find(x => x.id === idFromUrl());
+            return ok(account);
+        }
+
+        function updateAccount() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let account = accounts.find(x => x.id === idFromUrl());
+
+            Object.assign(account, params);
+            localStorage.setItem('accounts', JSON.stringify(accounts));
 
             return ok();
         }

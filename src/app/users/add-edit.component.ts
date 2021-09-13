@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services';
+import { UserService, AlertService } from '@app/_services';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -17,7 +17,7 @@ export class AddEditComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private accountService: AccountService,
+        private accountService: UserService,
         private alertService: AlertService
     ) {}
 
@@ -32,27 +32,29 @@ export class AddEditComponent implements OnInit {
         }
 
         this.form = this.formBuilder.group({
-            id: ['', Validators.required],
+            ssn: ['', Validators.required],
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             username: ['', Validators.required],
             password: ['', passwordValidators],
             address: ['', Validators.required],
             phoneNumber: ['', Validators.required],
-            income: ['', Validators.required]
+            income: ['', Validators.required],
+            clientType: ['', Validators.required]
         });
 
         if (!this.isAddMode) {
             this.accountService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => {
-                    this.f.id.setValue(x.id);
+                    this.f.ssn.setValue(x.ssn);
                     this.f.firstName.setValue(x.firstName);
                     this.f.lastName.setValue(x.lastName);
                     this.f.username.setValue(x.username);
                     this.f.address.setValue(x.address);
                     this.f.phoneNumber.setValue(x.phoneNumber);
                     this.f.income.setValue(x.income);
+                    this.f.clientType.setValue(x.clientType);
                 });
         }
     }
