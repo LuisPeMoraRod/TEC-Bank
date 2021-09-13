@@ -1,19 +1,18 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, Input, Output, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services';
+import { AccountService, AlertService } from '../_services';
+import { EventEmitter } from 'events';
 
-@Component({ 
-    templateUrl: 'login.component.html', 
-    styleUrls: ['login.component.css']
-})
+@Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
-    form: FormGroup;
+    loginForm: FormGroup;
     loading = false;
     submitted = false;
     returnUrl: string;
+    isAdmin: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -21,10 +20,15 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private accountService: AccountService,
         private alertService: AlertService
-    ) { }
+    ) {
+        // redirect to home if already logged in
+        if (this.accountService.userValue) {
+            this.router.navigate(['/']);
+        }
+    }
 
     ngOnInit() {
-        this.form = this.formBuilder.group({
+        this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
         });
@@ -34,7 +38,7 @@ export class LoginComponent implements OnInit {
     }
 
     // convenience getter for easy access to form fields
-    get f() { return this.form.controls; }
+    get f() { return this.loginForm.controls; }
 
     onSubmit() {
         this.submitted = true;
@@ -43,7 +47,7 @@ export class LoginComponent implements OnInit {
         this.alertService.clear();
 
         // stop here if form is invalid
-        if (this.form.invalid) {
+        if (this.loginForm.invalid) {
             return;
         }
 
@@ -58,5 +62,10 @@ export class LoginComponent implements OnInit {
                     this.alertService.error(error);
                     this.loading = false;
                 });
+    }
+
+    adminSwitch(){
+        this.isAdmin = !this.isAdmin;
+        console.log(`Admin state: ${this.isAdmin}`);
     }
 }

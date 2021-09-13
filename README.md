@@ -1,6 +1,6 @@
 # TEC Bank
 
-Running web app:
+**Running web app:**
 
 1) Install NodeJS and NPM from https://nodejs.org.
 2) Download or clone the project.

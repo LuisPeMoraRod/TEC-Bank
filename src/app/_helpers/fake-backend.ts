@@ -5,6 +5,7 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
 // array in local storage for registered users
 let users = JSON.parse(localStorage.getItem('users')) || [];
+let roles = JSON.parse(localStorage.getItem('roles')) || [];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -32,6 +33,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateUser();
                 case url.match(/\/users\/\d+$/) && method === 'DELETE':
                     return deleteUser();
+
+                case url.endsWith('/roles/register') && method === 'POST':
+                    return registerRole();
+                case url.endsWith('/roles') && method === 'GET':
+                    return getRoles();
+                case url.match(/\/roles\/\d+$/) && method === 'GET':
+                    return getRoleById();
+                case url.match(/\/roles\/\d+$/) && method === 'PUT':
+                    return updateRole();
+                case url.match(/\/roles\/\d+$/) && method === 'DELETE':
+                    return deleteRole();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -126,7 +138,55 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             const urlParts = url.split('/');
             return parseInt(urlParts[urlParts.length - 1]);
         }
+        
+        //Roles
+        function registerRole() {
+            const role = body
+    
+            if (roles.find(x => x.name === role.name)) {
+                return error('Username "' + role.name + '" is already taken')
+            }else if (roles.find(x => x.id === role.id)) {
+                return error('Username "' + role.id + '" is already taken')
+            }
+    
+            role.id = roles.length ? Math.max(...roles.map(x => x.id)) + 1 : 1;
+            roles.push(role);
+            localStorage.setItem('roles', JSON.stringify(roles));
+            return ok();
+        }
+
+        function getRoles() {
+            if (!isLoggedIn()) return unauthorized();
+            return ok(roles);
+        }
+
+        function deleteRole() {
+            if (!isLoggedIn()) return unauthorized();
+            roles = roles.filter(x => x.id !== idFromUrl());
+            localStorage.setItem('users', JSON.stringify(roles));
+            return ok();
+        }
+
+        function getRoleById() {
+            if (!isLoggedIn()) return unauthorized();
+            const role = roles.find(x => x.id === idFromUrl());
+            return ok(role);
+        }
+
+        function updateRole() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let role = roles.find(x => x.id === idFromUrl());
+
+            // update and save role
+            Object.assign(role, params);
+            localStorage.setItem('roles', JSON.stringify(roles));
+
+            return ok();
+        }
     }
+    
 }
 
 export const fakeBackendProvider = {
