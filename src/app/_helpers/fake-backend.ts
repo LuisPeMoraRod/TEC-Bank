@@ -204,9 +204,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             const account = body
     
             if (accounts.find(x => x.number === account.number)) {
-                return error('Account number "' + account.number + '" is already taken')
+                return error('Account number "' + account.number + '" is already taken');
             }else if (!users.find(x => x.ssn === account.clientId)){
-                return error('No client is registered with SSN: ' + account.clientId)
+                return error('No client is registered with SSN: ' + account.clientId);
             } 
     
             account.id = accounts.length ? Math.max(...accounts.map(x => x.id)) + 1 : 1;
