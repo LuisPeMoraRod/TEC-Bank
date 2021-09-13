@@ -32,19 +32,27 @@ export class AddEditComponent implements OnInit {
         }
 
         this.form = this.formBuilder.group({
+            id: ['', Validators.required],
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             username: ['', Validators.required],
-            password: ['', passwordValidators]
+            password: ['', passwordValidators],
+            address: ['', Validators.required],
+            phoneNumber: ['', Validators.required],
+            income: ['', Validators.required]
         });
 
         if (!this.isAddMode) {
             this.accountService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => {
+                    this.f.id.setValue(x.id);
                     this.f.firstName.setValue(x.firstName);
                     this.f.lastName.setValue(x.lastName);
                     this.f.username.setValue(x.username);
+                    this.f.address.setValue(x.address);
+                    this.f.phoneNumber.setValue(x.phoneNumber);
+                    this.f.income.setValue(x.income);
                 });
         }
     }
@@ -98,4 +106,12 @@ export class AddEditComponent implements OnInit {
                     this.loading = false;
                 });
     }
+
+    onKeyPress(event: any) {
+        const regexpNumber = /[0-9\+\-\ ]/;
+        let inputCharacter = String.fromCharCode(event.charCode);
+        if (event.keyCode != 8 && !regexpNumber.test(inputCharacter)) {
+          event.preventDefault();
+        }
+      }
 }

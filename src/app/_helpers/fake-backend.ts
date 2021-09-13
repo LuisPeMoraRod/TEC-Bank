@@ -186,7 +186,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
     }
-    
 }
 
 export const fakeBackendProvider = {
