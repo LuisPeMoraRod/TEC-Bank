@@ -282,7 +282,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function getCardById() {
             if (!isLoggedIn()) return unauthorized();
             const card = cards.find(x => x.id === idFromUrl());
-            return ok(cards);
+            return ok(card);
         }
 
         function updateCard() {
