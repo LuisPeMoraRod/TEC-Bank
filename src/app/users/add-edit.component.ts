@@ -17,7 +17,7 @@ export class AddEditComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private accountService: UserService,
+        private userService: UserService,
         private alertService: AlertService
     ) {}
 
@@ -44,7 +44,7 @@ export class AddEditComponent implements OnInit {
         });
 
         if (!this.isAddMode) {
-            this.accountService.getById(this.id)
+            this.userService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => {
                     this.f.ssn.setValue(x.ssn);
@@ -82,7 +82,7 @@ export class AddEditComponent implements OnInit {
     }
 
     private createUser() {
-        this.accountService.register(this.form.value)
+        this.userService.register(this.form.value)
             .pipe(first())
             .subscribe(
                 data => {
@@ -96,7 +96,7 @@ export class AddEditComponent implements OnInit {
     }
 
     private updateUser() {
-        this.accountService.update(this.id, this.form.value)
+        this.userService.update(this.id, this.form.value)
             .pipe(first())
             .subscribe(
                 data => {
