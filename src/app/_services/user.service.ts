@@ -42,15 +42,18 @@ export class UserService {
     }
 
     register(user: User) {
-        return this.http.post(`${environment.apiUrl}/users/register`, user);
+        //this.http.post(`${environment.apiUrl}/users/register`, user);
+        return this.http.post(`/client`, user);
     }
 
     getAll() {
-        return this.http.get<User[]>(`${environment.apiUrl}/users`);
+        //return this.http.get<User[]>(`${environment.apiUrl}/users`);
+        return this.http.get<User[]>(`/client/`);
+
     }
 
     getById(id: string) {
-        return this.http.get<User>(`${environment.apiUrl}/users/${id}`);
+        return this.http.get<User>(`/client/id/${id}`);
     }
 
     update(id, params) {

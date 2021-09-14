@@ -7,6 +7,7 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let roles = JSON.parse(localStorage.getItem('roles')) || [];
 let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+let cards = JSON.parse(localStorage.getItem('cards')) || [];
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -56,6 +57,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateAccount();
                 case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
                     return deleteAccount();
+
+                case url.endsWith('/cards/register') && method === 'POST':
+                    return registerCard();
+                case url.endsWith('/cards') && method === 'GET':
+                    return getCards();
+                case url.match(/\/cards\/\d+$/) && method === 'GET':
+                    return getCardById();
+                case url.match(/\/cards\/\d+$/) && method === 'PUT':
+                    return updateCard();
+                case url.match(/\/cards\/\d+$/) && method === 'DELETE':
+                    return deleteCard();
 
                 default:
                     // pass through any requests not handled above
@@ -203,9 +215,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     
             if (accounts.find(x => x.number === account.number)) {
                 return error('Account number "' + account.number + '" is already taken');
-            }else if (!users.find(x => x.ssn === account.clientId)){
-                return error('No client is registered with SSN: ' + account.clientId);
-            } 
+            }
     
             account.id = accounts.length ? Math.max(...accounts.map(x => x.id)) + 1 : 1;
             accounts.push(account);
@@ -239,6 +249,50 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             Object.assign(account, params);
             localStorage.setItem('accounts', JSON.stringify(accounts));
+
+            return ok();
+        }
+
+         //Cards
+         function registerCard() {
+            const card = body
+    
+            if (cards.find(x => x.number === card.number)) {
+                return error('Card number "' + card.number + '" is already taken');
+            }
+    
+            card.id = cards.length ? Math.max(...cards.map(x => x.id)) + 1 : 1;
+            cards.push(card);
+            localStorage.setItem('cards', JSON.stringify(cards));
+            return ok();
+        }
+
+        function getCards() {
+            if (!isLoggedIn()) return unauthorized();
+            return ok(cards);
+        }
+
+        function deleteCard() {
+            if (!isLoggedIn()) return unauthorized();
+            cards = cards.filter(x => x.id !== idFromUrl());
+            localStorage.setItem('cards', JSON.stringify(cards));
+            return ok();
+        }
+
+        function getCardById() {
+            if (!isLoggedIn()) return unauthorized();
+            const card = cards.find(x => x.id === idFromUrl());
+            return ok(cards);
+        }
+
+        function updateCard() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let card = cards.find(x => x.id === idFromUrl());
+
+            Object.assign(card, params);
+            localStorage.setItem('cards', JSON.stringify(cards));
 
             return ok();
         }

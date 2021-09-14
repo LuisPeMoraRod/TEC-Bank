@@ -24,4 +24,6 @@ export class ListComponent implements OnInit {
                 this.users = this.users.filter(x => x.id !== id) 
             });
     }
+
+    report(id: string){ }
 }
