@@ -20,7 +20,7 @@
                     <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
                     <span *ngIf="!user.isDeleting">Delete</span>
                 </button>
-                <button (click)="report(user.id)" class="btn btn-sm btn-success btn-delete-user" [disabled]="user.isDeleting">
+                <button (click)="report(user.id, user.firstName)" class="btn btn-sm btn-success btn-delete-user" [disabled]="user.isDeleting">
                     <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
                     <span *ngIf="!user.isDeleting">Report</span>
                 </button>
