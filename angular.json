@@ -30,7 +30,7 @@
             "styles": [
               "src/styles.less"
             ],
-            "scripts": [ 
+            "scripts": [
               "node_modules/jspdf/dist/jspdf.es.min.js"
             ]
           },
@@ -125,6 +125,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "angular-9-registration-login-example"
+    }
+  },
+  "defaultProject": "angular-9-registration-login-example",
+  "cli": {
+    "analytics": "adb3dd33-b7bb-4b28-843a-535ebdd6b364"
+  }
 }
