@@ -1,0 +1,33 @@
+﻿<h1>Cards</h1>
+<a routerLink="add" class="btn btn-sm btn-success mb-2">Add Card</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 22.5%">Card Number</th>
+            <th style="width: 22.5%">Type</th>
+            <th style="width: 22.5%">Owner's ID</th>
+            <th style="width: 22.5%">Balance</th>
+            <th style="width: 10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let card of cards">
+            <td>{{card.number}}</td>
+            <td>{{card.type}}</td>
+            <td>{{card.clientId}}</td>
+            <td>{{card.balance}}</td>
+            <td style="white-space: nowrap">
+                <a routerLink="edit/{{card.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+                <button (click)="deleteCard(card.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="card.isDeleting">
+                    <span *ngIf="card.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!card.isDeleting">Delete</span>
+                </button>
+            </td>
+        </tr>
+        <tr *ngIf="!cards">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
