@@ -63,11 +63,4 @@ export class LoginComponent implements OnInit {
                     this.loading = false;
                 });
     }
-
-    adminSwitch(){
-        this.isAdmin = !this.isAdmin;
-        if (this.f.username.value === "admin" && this.f.password.value === "admin"){
-            console.log('admin');
-        }
-    }
 }
