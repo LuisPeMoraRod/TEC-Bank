@@ -6,7 +6,7 @@
         <a *ngIf="user.username=='admin'" class="nav-item nav-link" routerLink="/roles" routerLInkAcrive="active" >Roles</a>
         <a *ngIf="user.username=='admin'" class="nav-item nav-link" routerLink="/accounts" routerLInkAcrive="active" >Accounts</a>
         <a *ngIf="user.username=='admin'" class="nav-item nav-link" routerLink="/cards" routerLInkAcrive="active" >Cards</a>
-        <a class="nav-item nav-link" routerLink="/myAccounts" routerLInkAcrive="active">My Accounts</a>
+        <a *ngIf="user.username !='admin'"class="nav-item nav-link" routerLink="/myAccounts" routerLInkAcrive="active">My Accounts</a>
         <a class="nav-item nav-link" (click)="logout()">Logout</a>
     </div>
 </nav>
