@@ -5,6 +5,10 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
 // array in local storage for registered users
 let users = JSON.parse(localStorage.getItem('users')) || [];
+let roles = JSON.parse(localStorage.getItem('roles')) || [];
+let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+let cards = JSON.parse(localStorage.getItem('cards')) || [];
+let myAccounts = JSON.parse(localStorage.getItem('myAccounts')) || [];;
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -32,6 +36,43 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateUser();
                 case url.match(/\/users\/\d+$/) && method === 'DELETE':
                     return deleteUser();
+
+                case url.endsWith('/roles/register') && method === 'POST':
+                    return registerRole();
+                case url.endsWith('/roles') && method === 'GET':
+                    return getRoles();
+                case url.match(/\/roles\/\d+$/) && method === 'GET':
+                    return getRoleById();
+                case url.match(/\/roles\/\d+$/) && method === 'PUT':
+                    return updateRole();
+                case url.match(/\/roles\/\d+$/) && method === 'DELETE':
+                    return deleteRole();
+
+                case url.endsWith('/accounts/register') && method === 'POST':
+                    return registerAccount();
+                case url.endsWith('/accounts') && method === 'GET':
+                    return getAccounts();
+                case url.match(/\/accounts\/\d+$/) && method === 'GET':
+                    return getAccountById();
+                case url.match(/\/accounts\/\d+$/) && method === 'PUT':
+                    return updateAccount();
+                case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
+                    return deleteAccount();
+                
+                case url.match(/\/myAccounts\/\d+$/) && method === 'GET':
+                    return getAccountById();
+
+                case url.endsWith('/cards/register') && method === 'POST':
+                    return registerCard();
+                case url.endsWith('/cards') && method === 'GET':
+                    return getCards();
+                case url.match(/\/cards\/\d+$/) && method === 'GET':
+                    return getCardById();
+                case url.match(/\/cards\/\d+$/) && method === 'PUT':
+                    return updateCard();
+                case url.match(/\/cards\/\d+$/) && method === 'DELETE':
+                    return deleteCard();
+
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -57,8 +98,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             const user = body
 
             if (users.find(x => x.username === user.username)) {
-                return error('Username "' + user.username + '" is already taken')
-            }
+                return error('Username "' + user.username + '" is already taken');
+            } 
 
             user.id = users.length ? Math.max(...users.map(x => x.id)) + 1 : 1;
             users.push(user);
@@ -125,6 +166,139 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function idFromUrl() {
             const urlParts = url.split('/');
             return parseInt(urlParts[urlParts.length - 1]);
+        }
+        
+        //Roles
+        function registerRole() {
+            const role = body
+    
+            if (roles.find(x => x.name === role.name)) {
+                return error('Username "' + role.name + '" is already taken')
+            }
+
+            role.id = roles.length ? Math.max(...roles.map(x => x.id)) + 1 : 1;
+            roles.push(role);
+            localStorage.setItem('roles', JSON.stringify(roles));
+            return ok();
+        }
+
+        function getRoles() {
+            if (!isLoggedIn()) return unauthorized();
+            return ok(roles);
+        }
+
+        function deleteRole() {
+            if (!isLoggedIn()) return unauthorized();
+            roles = roles.filter(x => x.id !== idFromUrl());
+            localStorage.setItem('users', JSON.stringify(roles));
+            return ok();
+        }
+
+        function getRoleById() {
+            if (!isLoggedIn()) return unauthorized();
+            const role = roles.find(x => x.id === idFromUrl());
+            return ok(role);
+        }
+
+        function updateRole() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let role = roles.find(x => x.id === idFromUrl());
+
+            // update and save role
+            Object.assign(role, params);
+            localStorage.setItem('roles', JSON.stringify(roles));
+
+            return ok();
+        }
+
+        //Accounts
+        function registerAccount() {
+            const account = body
+    
+            if (accounts.find(x => x.number === account.number)) {
+                return error('Account number "' + account.number + '" is already taken');
+            }
+    
+            account.id = accounts.length ? Math.max(...accounts.map(x => x.id)) + 1 : 1;
+            accounts.push(account);
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            return ok();
+        }
+
+        function getAccounts() {
+            if (!isLoggedIn()) return unauthorized();
+            return ok(accounts);
+        }
+
+        function deleteAccount() {
+            if (!isLoggedIn()) return unauthorized();
+            accounts = accounts.filter(x => x.id !== idFromUrl());
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            return ok();
+        }
+
+        function getAccountById() {
+            if (!isLoggedIn()) return unauthorized();
+            const account = accounts.find(x => x.id === idFromUrl());
+            return ok(account);
+        }
+
+        function updateAccount() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let account = accounts.find(x => x.id === idFromUrl());
+
+            Object.assign(account, params);
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+
+            return ok();
+        }
+
+         //Cards
+         function registerCard() {
+            const card = body
+    
+            if (cards.find(x => x.number === card.number)) {
+                return error('Card number "' + card.number + '" is already taken');
+            }
+    
+            card.id = cards.length ? Math.max(...cards.map(x => x.id)) + 1 : 1;
+            cards.push(card);
+            localStorage.setItem('cards', JSON.stringify(cards));
+            return ok();
+        }
+
+        function getCards() {
+            if (!isLoggedIn()) return unauthorized();
+            return ok(cards);
+        }
+
+        function deleteCard() {
+            if (!isLoggedIn()) return unauthorized();
+            cards = cards.filter(x => x.id !== idFromUrl());
+            localStorage.setItem('cards', JSON.stringify(cards));
+            return ok();
+        }
+
+        function getCardById() {
+            if (!isLoggedIn()) return unauthorized();
+            const card = cards.find(x => x.id === idFromUrl());
+            return ok(card);
+        }
+
+        function updateCard() {
+            if (!isLoggedIn()) return unauthorized();
+
+            let params = body;
+            let card = cards.find(x => x.id === idFromUrl());
+
+            Object.assign(card, params);
+            localStorage.setItem('cards', JSON.stringify(cards));
+
+            return ok();
         }
     }
 }

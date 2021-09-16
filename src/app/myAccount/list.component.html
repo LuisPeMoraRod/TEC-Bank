@@ -1,0 +1,33 @@
+﻿<h1>My Accounts</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 10%">Number</th>
+            <th style="width: 30%">Description</th>
+            <th style="width: 10%">Currency</th>
+            <th style="width: 10%">Type</th>
+            <th style="width: 40%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let account of accounts">
+                
+                <td *ngIf="user.id==account.clientId">{{account.number}}</td>
+                <td *ngIf="user.id==account.clientId">{{account.description}}</td>
+                <td *ngIf="user.id==account.clientId">{{account.currency}}</td>
+                <td *ngIf="user.id==account.clientId">{{account.type}}</td>
+                <td *ngIf="user.id==account.clientId" style="white-space: nowrap">
+                    <a class="btn btn-sm btn-primary mr-1">Activity</a>
+                    <a class="btn btn-sm btn-primary mr-1">Cards</a>
+                    <a class="btn btn-sm btn-primary mr-1">Transfer money</a>
+                </td>
+        </tr>
+
+        <tr *ngIf="!accounts">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>

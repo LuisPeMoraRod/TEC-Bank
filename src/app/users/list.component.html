@@ -4,7 +4,7 @@
     <thead>
         <tr>
             <th style="width: 30%">First Name</th>
-            <th style="width: 30%">Last Name</th>
+            <th style="width: 30%">Last Names</th>
             <th style="width: 30%">Username</th>
             <th style="width: 10%"></th>
         </tr>
@@ -19,6 +19,10 @@
                 <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
                     <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
                     <span *ngIf="!user.isDeleting">Delete</span>
+                </button>
+                <button (click)="report(user.id, user.firstName)" class="btn btn-sm btn-success btn-delete-user" [disabled]="user.isDeleting">
+                    <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!user.isDeleting">Report</span>
                 </button>
             </td>
         </tr>

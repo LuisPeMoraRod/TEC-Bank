@@ -70,3 +70,12 @@ body {
     background-color: #000 !important;
     color: #fff;
 }
+
+.btn-primary{
+    background-color: #2C3C5B;
+    border-color: #2C3C5B;
+}
+
+.btn-link{
+    color: #2C3C5B;
+}

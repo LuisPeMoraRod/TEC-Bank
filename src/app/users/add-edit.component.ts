@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '@app/_services';
+import { UserService, AlertService } from '@app/_services';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -17,7 +17,7 @@ export class AddEditComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private accountService: AccountService,
+        private userService: UserService,
         private alertService: AlertService
     ) {}
 
@@ -32,19 +32,29 @@ export class AddEditComponent implements OnInit {
         }
 
         this.form = this.formBuilder.group({
+            ssn: ['', Validators.required],
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             username: ['', Validators.required],
-            password: ['', passwordValidators]
+            password: ['', passwordValidators],
+            address: ['', Validators.required],
+            phoneNumber: ['', Validators.required],
+            income: ['', Validators.required],
+            clientType: ['', Validators.required]
         });
 
         if (!this.isAddMode) {
-            this.accountService.getById(this.id)
+            this.userService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => {
+                    this.f.ssn.setValue(x.ssn);
                     this.f.firstName.setValue(x.firstName);
                     this.f.lastName.setValue(x.lastName);
                     this.f.username.setValue(x.username);
+                    this.f.address.setValue(x.address);
+                    this.f.phoneNumber.setValue(x.phoneNumber);
+                    this.f.income.setValue(x.income);
+                    this.f.clientType.setValue(x.clientType);
                 });
         }
     }
@@ -72,7 +82,7 @@ export class AddEditComponent implements OnInit {
     }
 
     private createUser() {
-        this.accountService.register(this.form.value)
+        this.userService.register(this.form.value)
             .pipe(first())
             .subscribe(
                 data => {
@@ -86,7 +96,7 @@ export class AddEditComponent implements OnInit {
     }
 
     private updateUser() {
-        this.accountService.update(this.id, this.form.value)
+        this.userService.update(this.id, this.form.value)
             .pipe(first())
             .subscribe(
                 data => {
@@ -98,4 +108,12 @@ export class AddEditComponent implements OnInit {
                     this.loading = false;
                 });
     }
+
+    onKeyPress(event: any) {
+        const regexpNumber = /[0-9\+\-\ ]/;
+        let inputCharacter = String.fromCharCode(event.charCode);
+        if (event.keyCode != 8 && !regexpNumber.test(inputCharacter)) {
+          event.preventDefault();
+        }
+      }
 }
