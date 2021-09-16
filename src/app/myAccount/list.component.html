@@ -11,18 +11,20 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let user of users">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="white-space: nowrap">
-                <a routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary mr-1">Activity</a>
-                <a routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary mr-1">Cards</a>
-                <a routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary mr-1">Transfer money</a>
-            </td>
+        <tr *ngFor="let account of accounts">
+                
+                <td *ngIf="user.id==account.clientId">{{account.number}}</td>
+                <td *ngIf="user.id==account.clientId">{{account.description}}</td>
+                <td *ngIf="user.id==account.clientId">{{account.currency}}</td>
+                <td *ngIf="user.id==account.clientId">{{account.type}}</td>
+                <td *ngIf="user.id==account.clientId" style="white-space: nowrap">
+                    <a class="btn btn-sm btn-primary mr-1">Activity</a>
+                    <a class="btn btn-sm btn-primary mr-1">Cards</a>
+                    <a class="btn btn-sm btn-primary mr-1">Transfer money</a>
+                </td>
         </tr>
-        <tr *ngIf="!users">
+
+        <tr *ngIf="!accounts">
             <td colspan="4" class="text-center">
                 <span class="spinner-border spinner-border-lg align-center"></span>
             </td>

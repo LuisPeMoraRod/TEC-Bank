@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { MyAccountRoutingModule } from './myAccount-routing.module';
 import { LayoutComponent } from './layout.component';
 import { ListComponent } from './list.component';
-import { AddEditComponent } from './add-edit.component';
 
 @NgModule({
     imports: [
@@ -16,7 +15,6 @@ import { AddEditComponent } from './add-edit.component';
     declarations: [
         LayoutComponent,
         ListComponent,
-        AddEditComponent
     ]
 })
 export class MyAccountModule { }

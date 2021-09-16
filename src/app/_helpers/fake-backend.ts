@@ -8,6 +8,7 @@ let users = JSON.parse(localStorage.getItem('users')) || [];
 let roles = JSON.parse(localStorage.getItem('roles')) || [];
 let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
 let cards = JSON.parse(localStorage.getItem('cards')) || [];
+let myAccounts = JSON.parse(localStorage.getItem('myAccounts')) || [];;
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -57,6 +58,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateAccount();
                 case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
                     return deleteAccount();
+                
+                case url.match(/\/myAccounts\/\d+$/) && method === 'GET':
+                    return getAccountById();
 
                 case url.endsWith('/cards/register') && method === 'POST':
                     return registerCard();
